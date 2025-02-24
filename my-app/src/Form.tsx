@@ -5,6 +5,7 @@ import { Button } from './Button';
 import { useState } from 'react';
 import { ImageInput } from './ImageInput';
 import { addEntry } from './data';
+import { useNavigate } from 'react-router-dom';
 
 export function Form() {
   const [title, setTitle] = useState('');
@@ -12,34 +13,11 @@ export function Form() {
     'images/placeholder-image-square.jpg'
   );
   const [notes, setNotes] = useState('');
-
-  // const [error, setError] = useState<unknown>();
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [entry, setEntry] = useState<UnsavedEntry[]>([]);
-
-  // useEffect(() => {
-  //   async function work() {
-  //     try {
-  //       const read = await readEntries();
-  //       setEntry(read);
-  //     } catch (error) {
-  //       setError(error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   }
-  //   work();
-  // }, []);
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-  // if (error) {
-  //   return (
-  //     <div>
-  //       Error! {error instanceof Error ? error.message : 'Unknown Error'}
-  //     </div>
-  //   );
-  // }
+  const navSubmit = useNavigate();
+  function handleSave() {
+    addEntry({ title, notes, photoUrl });
+    navSubmit('/entries');
+  }
 
   return (
     <>
@@ -73,17 +51,7 @@ export function Form() {
             </div>
             <div className="column-full">
               <Notes onNotesInput={(e) => setNotes(e)} />
-              <Button
-                onSave={() =>
-                  addEntry({
-                    title,
-                    notes,
-                    photoUrl,
-                  })
-                }
-                type="submit"
-                btnName="Save"
-              />
+              <Button onSave={handleSave} type="submit" btnName="Save" />
             </div>
           </div>
         </form>
