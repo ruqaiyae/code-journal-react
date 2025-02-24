@@ -3,24 +3,22 @@ type Props = {
   id: string;
   type: string;
   name: string;
-  onchange: (value: string) => void;
+  onInput: (e: string) => void;
 };
 
-export function Input({ label, id, type, name, onchange }: Props) {
+export function Input({ label, id, type, name, onInput }: Props) {
   return (
     <>
-      <div className="column-half">
-        <label>
-          {label}
-          <input
-            id={id}
-            type={type}
-            name={name}
-            onChange={(event) => onchange(event.target.value)}
-            required
-          />
-        </label>
-      </div>
+      <label>
+        {label}
+        <input
+          onChange={(e) => onInput(e.target.value)}
+          id={id}
+          type={type}
+          name={name}
+          required
+        />
+      </label>
     </>
   );
 }

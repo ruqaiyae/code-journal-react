@@ -1,8 +1,16 @@
-export function Notes() {
+type Props = {
+  onNotesInput: (e: string) => void;
+};
+
+export function Notes({ onNotesInput }: Props) {
   return (
     <>
       <label>Notes</label>
-      <textarea name="notes" id="notes" required></textarea>
+      <textarea
+        onChange={(e) => onNotesInput(e.target.value)}
+        name="notes"
+        id="notes"
+        required></textarea>
     </>
   );
 }
