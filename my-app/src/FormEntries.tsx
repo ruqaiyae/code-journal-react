@@ -1,3 +1,3 @@
 export function FormEntries() {
-  return <></>;
+  return null;
 }
