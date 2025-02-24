@@ -4,9 +4,10 @@ type Props = {
   type: string;
   name: string;
   onInput: (e: string) => void;
+  value: string;
 };
 
-export function Input({ label, id, type, name, onInput }: Props) {
+export function Input({ label, id, type, name, onInput, value }: Props) {
   return (
     <>
       <label>
@@ -16,6 +17,7 @@ export function Input({ label, id, type, name, onInput }: Props) {
           id={id}
           type={type}
           name={name}
+          value={value}
           required
         />
       </label>

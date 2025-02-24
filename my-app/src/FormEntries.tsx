@@ -41,7 +41,6 @@ export function FormEntries() {
           <h1>Entries</h1>
           <BtnNew />
         </div>
-        {/* adding logic for no entries on p */}
         {entries.length === 0 && (
           <p className="no-entries-text">No entries have been recorded</p>
         )}
@@ -57,7 +56,7 @@ export function FormEntries() {
                 <div className="column-half">
                   <h1>
                     {entry.title}
-                    <Link to="/">
+                    <Link to={`/form/${entry.entryId}`}>
                       <FaPencilAlt size="20px" color="black" />
                     </Link>
                   </h1>

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export function BtnNew() {
   return (
-    <Link to="/">
+    <Link to="/form">
       <button type="button" className="new-entry-button" data-view="entry-form">
         New
       </button>

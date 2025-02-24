@@ -8,9 +8,9 @@ export function Header() {
         <div className="container">
           <nav className="navbar column-full">
             <span>
-              <Link to="/">Code Journal</Link>
+              <Link to="/form">Code Journal</Link>
             </span>
-            <Link to="/entries">Form Entries</Link>
+            <Link to="/">Form Entries</Link>
           </nav>
         </div>
       </header>

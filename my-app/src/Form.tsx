@@ -2,13 +2,13 @@ import { Image } from './Image';
 import { Input } from './Input';
 import { Notes } from './Notes';
 import { Button } from './Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ImageInput } from './ImageInput';
-import { addEntry } from './data';
-import { useNavigate } from 'react-router-dom';
+import { addEntry, readEntry } from './data';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function Form() {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState<string>('');
   const [photoUrl, setPhotoUrl] = useState(
     'images/placeholder-image-square.jpg'
   );
@@ -16,7 +16,40 @@ export function Form() {
   const navSubmit = useNavigate();
   function handleSave() {
     addEntry({ title, notes, photoUrl });
-    navSubmit('/entries');
+    navSubmit('/');
+  }
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<unknown>();
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    async function work() {
+      try {
+        const read = await readEntry(Number(id));
+        if (!read) throw new Error(`id ${id} does not exist`);
+        setTitle(read?.title);
+        setPhotoUrl(read?.photoUrl);
+        setNotes(read?.notes);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    work();
+  }, [id]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return (
+      <div>
+        Error! {error instanceof Error ? error.message : 'Unknown Error'}
+      </div>
+    );
   }
 
   return (
@@ -35,6 +68,7 @@ export function Form() {
                 id="title"
                 type="text"
                 name="title"
+                value={title}
               />
               <ImageInput
                 label="Photo URL"
@@ -50,7 +84,7 @@ export function Form() {
               />
             </div>
             <div className="column-full">
-              <Notes onNotesInput={(e) => setNotes(e)} />
+              <Notes onNotesInput={(e) => setNotes(e)} value={notes} />
               <Button onSave={handleSave} type="submit" btnName="Save" />
             </div>
           </div>
