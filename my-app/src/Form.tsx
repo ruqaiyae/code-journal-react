@@ -4,8 +4,9 @@ import { Notes } from './Notes';
 import { Button } from './Button';
 import { useEffect, useState } from 'react';
 import { ImageInput } from './ImageInput';
-import { addEntry, readEntry } from './data';
+import { addEntry, readEntry, removeEntry, updateEntry } from './data';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ModalDelete } from './ModalDelete';
 
 export function Form() {
   const [title, setTitle] = useState<string>('');
@@ -13,9 +14,15 @@ export function Form() {
     'images/placeholder-image-square.jpg'
   );
   const [notes, setNotes] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
   const navSubmit = useNavigate();
-  function handleSave() {
-    addEntry({ title, notes, photoUrl });
+
+  async function handleSave() {
+    if (id === undefined) {
+      await addEntry({ title, notes, photoUrl });
+    } else if (id !== undefined) {
+      await updateEntry({ title, notes, photoUrl, entryId: Number(id) });
+    }
     navSubmit('/');
   }
 
@@ -38,7 +45,11 @@ export function Form() {
         setIsLoading(false);
       }
     }
-    work();
+    if (id !== undefined) {
+      work();
+    } else {
+      setIsLoading(false);
+    }
   }, [id]);
 
   if (isLoading) {
@@ -52,12 +63,20 @@ export function Form() {
     );
   }
 
+  function handleDelete() {
+    setIsOpen(false);
+    removeEntry(Number(id));
+    navSubmit('/');
+  }
+
   return (
     <>
       <div data-view="entry-form" className="entry-form-wrapper">
         <form id="entry-form">
           <div className="column-full">
-            <h1 className="new-entry-header">New Entry</h1>
+            <h1 className="new-entry-header">
+              {id === undefined ? 'New Entry' : 'Edit Entry'}
+            </h1>
           </div>
           <div className="row">
             <Image imageUrl={photoUrl} />
@@ -86,6 +105,16 @@ export function Form() {
             <div className="column-full">
               <Notes onNotesInput={(e) => setNotes(e)} value={notes} />
               <Button onSave={handleSave} type="submit" btnName="Save" />
+              {id && (
+                <button type="button" onClick={() => setIsOpen(true)}>
+                  Delete
+                </button>
+              )}
+              <ModalDelete
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                onDelete={handleDelete}
+              />
             </div>
           </div>
         </form>
@@ -93,3 +122,29 @@ export function Form() {
     </>
   );
 }
+
+// / / App.tsx
+// import { useState } from 'react';
+// import { Modal } from './Modal';
+// import './App.css';
+// function App() {
+//   const [isOpen, setIsOpen] = useState(false);
+//   function handleClose() {
+//     setIsOpen(false);
+//   }
+//   function handleDelete() {
+//     alert('Deleted successfully');
+//     setIsOpen(false);
+//   }
+//   return (
+//     <>
+//       <button onClick={() => setIsOpen(true)}>Delete Me!</button>
+//       <Modal isOpen={isOpen} onClose={handleClose}>
+//         <p>Are you sure you want to delete this?</p>
+//         <button onClick={handleClose}>Cancel</button>
+//         <button onClick={handleDelete}>Delete</button>
+//       </Modal>
+//     </>
+//   );
+// }
+// export default App;
