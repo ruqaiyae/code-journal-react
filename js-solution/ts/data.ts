@@ -1,4 +1,11 @@
 /* exported data, writeData */
+interface Entry {
+  entryId: number;
+  title: string;
+  photoUrl: string;
+  notes: string;
+}
+
 interface Data {
   view: 'entries' | 'entry-form';
   entries: Entry[];
